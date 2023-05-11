@@ -1,0 +1,20 @@
+--
+-- Create model Book
+--
+CREATE TABLE "library_book" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "title" varchar(100) NOT NULL, "author" varchar(100) NOT NULL, "category" varchar(100) NOT NULL);
+--
+-- Create model UserProfile
+--
+CREATE TABLE "library_userprofile" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "prn_no" integer NULL UNIQUE, "is_staff" bool NULL, "branch" varchar(100) NULL, "user_id" integer NOT NULL UNIQUE REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model BookInstance
+--
+CREATE TABLE "library_bookinstance" ("isbn" char(32) NOT NULL PRIMARY KEY, "Is_borrowed" bool NOT NULL, "book_id" bigint NULL REFERENCES "library_book" ("id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model Book_Issue
+--
+CREATE TABLE "library_book_issue" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "issue_date" datetime NOT NULL, "due_date" datetime NOT NULL, "book_instance_id" char(32) NOT NULL REFERENCES "library_bookinstance" ("isbn") DEFERRABLE INITIALLY DEFERRED, "borrower_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED);
+CREATE INDEX "library_bookinstance_book_id_b6c61373" ON "library_bookinstance" ("book_id");
+CREATE INDEX "library_book_issue_book_instance_id_1b941dd2" ON "library_book_issue" ("book_instance_id");
+CREATE INDEX "library_book_issue_borrower_id_0f925c11" ON "library_book_issue" ("borrower_id");
+COMMIT;
